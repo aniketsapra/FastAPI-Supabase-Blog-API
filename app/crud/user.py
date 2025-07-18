@@ -5,9 +5,9 @@ from passlib.hash import bcrypt
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
-def create_user(db: Session, email: str, password: str):
+def create_user(db: Session, email: str, password: str, role: str = "user"):
     hashed = bcrypt.hash(password)
-    user = User(email=email, hashed_password=hashed)
+    user = User(email=email, hashed_password=hashed, role=role)
     db.add(user)
     db.commit()
     db.refresh(user)

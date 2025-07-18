@@ -4,14 +4,14 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal, get_db
 from app.models.post import Post
 from app.schemas.post import PostCreate, PostResponse, PostOut, PostDetailOut
-from app.auth.dependencies import get_current_user  # already implemented
+from app.auth.dependencies import get_current_user, require_admin  # already implemented
 from app.models.users import User
 from fastapi import Query
 
 
 router = APIRouter(tags=["Posts"])
 
-@router.post("/post", response_model=PostResponse)
+@router.post("/post", response_model=PostResponse, dependencies=[Depends(require_admin)])
 def create_post(post_data: PostCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     new_post = Post(
         title=post_data.title,

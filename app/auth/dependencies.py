@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 from sqlalchemy.orm import Session
@@ -17,7 +17,7 @@ def get_db():
         db.close()
 
 # Core auth dependency
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(request: Request, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -29,4 +29,14 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     user = get_user_by_email(db, email=payload["sub"])
     if not user:
         raise credentials_exception
+    
+    request.state.user = user
+
     return user
+
+def get_current_user_role(current_user: dict = Depends(get_current_user)):
+    return current_user.role
+
+def require_admin(role: str = Depends(get_current_user_role)):
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="Admins only")

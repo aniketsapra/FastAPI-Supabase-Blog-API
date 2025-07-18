@@ -19,8 +19,8 @@ def register(data: UserCreate, db: Session = Depends(get_db)):
     existing_user = crud_user.get_user_by_email(db, data.email)
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    user = crud_user.create_user(db, data.email, data.password)
-    token = create_access_token({"sub": user.email})
+    user = crud_user.create_user(db, data.email, data.password, data.role)
+    token = create_access_token({"sub": user.email, "role": user.role})
     return {"access_token": token}
 
 @router.post("/login", response_model=Token)
