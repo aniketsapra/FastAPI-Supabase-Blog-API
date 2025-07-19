@@ -11,6 +11,9 @@ Includes features like authentication (JWT), blog post CRUD, image uploads, comm
 -SQLAlchemy + Pydantic V2 with from_attributes=True
 -Rate limiting with slowapi
 ```
+## Environment Variables
+
+Create a `.env` file based on the template below:
 
 ```.env.example
 SUPABASE_URL=https://your-project.supabase.co
@@ -18,15 +21,16 @@ SUPABASE_KEY=your_supabase_service_role_key
 SUPABASE_BUCKET_NAME=your_bucket
 JWT_SECRET=your_jwt_secret
 ```
-
 ## Docker Setup
+
 Build & Start the Project
-  docker-compose up --build
-
+```docker-compose up --build```
 This will:
-  Build the FastAPI Docker image
-  Start the app on http://localhost:8000
-
+Build the FastAPI Docker image
+Start the app on 
+```
+http://localhost:8000
+```
 Test the API
 
 Open Swagger docs:
