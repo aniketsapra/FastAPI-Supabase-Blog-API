@@ -2,7 +2,7 @@
 A modern, secure blog backend built with FastAPI, Supabase (PostgreSQL, Auth, Storage), and Docker.
 Includes features like authentication (JWT), blog post CRUD, image uploads, comments, and rate limiting.
 
-### Features
+```Features
 -User authentication with JWT (Login/Register)
 -Create, Read, Update, Delete blog posts
 -Comment on posts (rate-limited)
@@ -10,6 +10,7 @@ Includes features like authentication (JWT), blog post CRUD, image uploads, comm
 -Role-based access (admin check for some routes)
 -SQLAlchemy + Pydantic V2 with from_attributes=True
 -Rate limiting with slowapi
+```
 
 ```.env.example
 SUPABASE_URL=https://your-project.supabase.co
@@ -36,7 +37,7 @@ You can also use tools like Postman or curl
 
 
 ```Example Routes
-## Method	Endpoint	Description
+Method	Endpoint	Description
 POST	/register	Register a new user
 POST	/login	Login and get JWT token
 GET	/posts/	List all posts
