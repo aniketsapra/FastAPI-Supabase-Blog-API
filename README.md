@@ -59,9 +59,11 @@ Developer Notes
     Use Depends(require_admin) to protect admin routes
 
 Technologies Used
+```
     FastAPI
     Supabase
     SQLAlchemy
     Pydantic V2
     Docker
     slowapi
+```
