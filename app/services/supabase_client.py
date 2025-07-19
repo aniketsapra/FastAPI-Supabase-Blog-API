@@ -1,11 +1,4 @@
-# app/supabase_client.py
-from supabase import create_client
-import os
-from dotenv import load_dotenv
+from supabase import create_client, Client
+from app.config import settings
 
-load_dotenv()
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
