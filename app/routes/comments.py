@@ -39,7 +39,12 @@ def add_comment(
 
 
 @router.get("/{post_id}/comments", response_model=list[CommentOut], dependencies=[Depends(require_admin)])
-def get_comments(post_id: int, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def get_comments(
+    request: Request,
+    post_id: int, 
+    db: Session = Depends(get_db)
+):
     post = db.query(Post).filter(Post.id == post_id).first()
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")

@@ -7,12 +7,15 @@ from app.schemas.post import PostCreate, PostResponse, PostOut, PostDetailOut
 from app.auth.dependencies import get_current_user, require_admin  # already implemented
 from app.models.users import User
 from fastapi import Query
-
+from slowapi import Limiter
+from fastapi import Request
+from app.services.limiter import limiter 
 
 router = APIRouter(tags=["Posts"])
 
 @router.post("/post", response_model=PostResponse, dependencies=[Depends(require_admin)])
-def create_post(post_data: PostCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+@limiter.limit("2/minute")
+def create_post(request:Request, post_data: PostCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     new_post = Post(
         title=post_data.title,
         content=post_data.content,
@@ -26,7 +29,9 @@ def create_post(post_data: PostCreate, db: Session = Depends(get_db), current_us
 
 
 @router.get("/posts", response_model=list[PostOut])
+@limiter.limit("5/minute")
 def get_posts(
+    request: Request,
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1),
     db: Session = Depends(get_db)
@@ -36,7 +41,8 @@ def get_posts(
 
 
 @router.get("/posts/{post_id}", response_model=PostDetailOut)
-def get_post(post_id: int, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def get_post(request: Request, post_id: int, db: Session = Depends(get_db)):
     post = db.query(Post).filter(Post.id == post_id).first()
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -44,7 +50,9 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/posts/{post_id}", response_model=PostOut)
+@limiter.limit("2/minute")
 def update_post(
+    request: Request,
     post_id: int,
     updated_data: PostCreate,
     db: Session = Depends(get_db),
@@ -64,7 +72,9 @@ def update_post(
 
 
 @router.delete("/posts/{post_id}")
+@limiter.limit("1/minute")
 def delete_post(
+    request: Request,
     post_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
