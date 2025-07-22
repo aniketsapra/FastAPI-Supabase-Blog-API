@@ -1,13 +1,15 @@
 from pydantic import BaseModel
 from datetime import datetime
+from uuid import UUID
 
 class CommentCreate(BaseModel):
+    post_id: UUID
     comment_text: str
 
 class CommentOut(BaseModel):
-    id: int
-    post_id: int
-    user_id: int
+    id: UUID
+    post_id: UUID
+    user_id: UUID
     comment_text: str
     created_at: datetime
 

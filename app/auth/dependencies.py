@@ -1,42 +1,25 @@
-from fastapi import Depends, HTTPException, status, Request
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
-from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.crud.user import get_user_by_email
-from app.auth.jwt import decode_access_token
+# app/auth/dependencies.py
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.database import get_db
+from app.auth.supabase_auth import verify_supabase_token
+from app.auth.sync_user import create_user_from_supabase_token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")  # Swagger-compatible
+bearer_scheme = HTTPBearer()
 
-# Get DB session dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# Core auth dependency
-def get_current_user(request: Request, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    payload = decode_access_token(token)
-    if not payload or "sub" not in payload:
-        raise credentials_exception
-    user = get_user_by_email(db, email=payload["sub"])
-    if not user:
-        raise credentials_exception
-    
-    request.state.user = user
-
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: AsyncSession = Depends(get_db)
+):
+    token = credentials.credentials
+    token_data = verify_supabase_token(token)
+    user = await create_user_from_supabase_token(db, token_data)
     return user
 
-def get_current_user_role(current_user: dict = Depends(get_current_user)):
-    return current_user.role
+async def get_current_user_role(user = Depends(get_current_user)):
+    return getattr(user, "role", "authenticated")
 
-def require_admin(role: str = Depends(get_current_user_role)):
+async def require_admin(role: str = Depends(get_current_user_role)):
     if role != "admin":
         raise HTTPException(status_code=403, detail="Admins only")
