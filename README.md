@@ -40,7 +40,7 @@ Open Swagger docs:
 You can also use tools like Postman or curl
 
 
-Example Routes
+```Example Routes
 Method	    Endpoint	                Description
 POST	    /auth/register	        Register a new user
 POST	    /auth/login	            Login and get JWT token
@@ -50,6 +50,7 @@ GET	        /posts/{id}	            Get a single post by ID
 POST	    /comments    	        Add a comment (auth)
 GET	        /posts/{id}/comments	Get comments (admin only)
 POST	    /upload/image	        Upload image to Supabase
+```
 
 Developer Notes
 
