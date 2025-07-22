@@ -3,7 +3,7 @@ A modern, secure blog backend built with FastAPI, Supabase (PostgreSQL, Auth, St
 Includes features like authentication (JWT), blog post CRUD, image uploads, comments, and rate limiting.
 
 ```Features
--User authentication with JWT (Login/Register)
+-User authentication with SupabaseAUTH
 -Create, Read, Update, Delete blog posts
 -Comment on posts (rate-limited)
 -Upload images to Supabase storage
@@ -15,12 +15,21 @@ Includes features like authentication (JWT), blog post CRUD, image uploads, comm
 
 Create a `.env` file based on the template below:
 
-```.env.example
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your_supabase_service_role_key
-SUPABASE_BUCKET_NAME=your_bucket
-JWT_SECRET=your_jwt_secret
-```
+# === Supabase Config ===
+SUPABASE_URL=https://<your-project-id>.supabase.co
+SUPABASE_KEY=sb_secret_<your-service-role-key>
+SUPABASE_PROJECT_ID=<your-project-id>
+SUPABASE_JWT_SECRET=<your-supabase-jwt-secret>
+SUPABASE_JWKS_URL=https://<your-project-id>.supabase.co/auth/v1/.well-known/jwks.json
+SUPABASE_AUDIENCE=<your-project-id>
+SUPABASE_ALGORITHM=ES256
+
+# === PostgreSQL Database ===
+DATABASE_URL=postgresql://<username>.<project-id>:<password>@<host>:5432/postgres
+
+# === JWT for FastAPI ===
+JWT_SECRET=<your-custom-jwt-secret>
+
 ## Docker Setup
 
 Build & Start the Project
