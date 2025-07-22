@@ -11,11 +11,11 @@ Includes features like authentication (JWT), blog post CRUD, image uploads, comm
 -SQLAlchemy + Pydantic V2 with from_attributes=True
 -Rate limiting with slowapi
 ```
-## Environment Variables
+```## Environment Variables
 
 Create a `.env` file based on the template below:
 
-# === Supabase Config ===
+# Supabase Config 
 SUPABASE_URL=https://<your-project-id>.supabase.co
 SUPABASE_KEY=sb_secret_<your-service-role-key>
 SUPABASE_PROJECT_ID=<your-project-id>
@@ -24,12 +24,12 @@ SUPABASE_JWKS_URL=https://<your-project-id>.supabase.co/auth/v1/.well-known/jwks
 SUPABASE_AUDIENCE=<your-project-id>
 SUPABASE_ALGORITHM=ES256
 
-# === PostgreSQL Database ===
+#  PostgreSQL Database 
 DATABASE_URL=postgresql://<username>.<project-id>:<password>@<host>:5432/postgres
 
-# === JWT for FastAPI ===
+# JWT for FastAPI 
 JWT_SECRET=<your-custom-jwt-secret>
-
+```
 ## Docker Setup
 
 Build & Start the Project
