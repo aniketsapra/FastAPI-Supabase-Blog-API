@@ -44,11 +44,11 @@ You can also use tools like Postman or curl
 Method	    Endpoint	                Description
 POST	    /auth/register	        Register a new user
 POST	    /auth/login	            Login and get JWT token
-GET	        /posts	                List all posts
+GET         /posts	                List all posts
 POST	    /post	                Create a new post (auth)
-GET	        /posts/{id}	            Get a single post by ID
+GET         /posts/{id}	            Get a single post by ID
 POST	    /comments    	        Add a comment (auth)
-GET	        /posts/{id}/comments	Get comments (admin only)
+GET         /posts/{id}/comments	Get comments (admin only)
 POST	    /upload/image	        Upload image to Supabase
 ```
 
